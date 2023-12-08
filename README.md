@@ -1,4 +1,4 @@
-# FormThing: End to End Encrypted Form Builder on the Blockchain
+# CipherForms: End to End Encrypted Form Builder on the Blockchain
 
 ## 👋 Introduction
 
