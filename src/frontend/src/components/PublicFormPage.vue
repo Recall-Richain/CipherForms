@@ -123,7 +123,7 @@
 import { useGeneralUtils } from '@/composables/useGeneralUtils'
 import { useVetkdUtils } from '@/composables/useVetkdUtils'
 import { useSeoMeta } from '@vueuse/head'
-import type { ResultFormReturnPublicWithNonce } from '@root/declarations/form_thing_backend/form_thing_backend.did.d.ts'
+import type { ResultFormReturnPublicWithNonce } from '@root/declarations/backend/backend.did.d.ts'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -144,7 +144,7 @@ useSeoMeta({
 })
 
 try {
-  const form_res = await vetkdUtils.form_thing_backend.get_form_by_id_with_nonce(
+  const form_res = await vetkdUtils.backend.get_form_by_id_with_nonce(
     route.params.formId as string
   )
   form.value = form_res
@@ -209,7 +209,7 @@ const encrypt_and_send = async (e: Event) => {
     }
 
     // send encrypted data to backend
-    const res = await vetkdUtils.form_thing_backend.create_entry(
+    const res = await vetkdUtils.backend.create_entry(
       form.value.ok.id,
       encrypted_data,
       form.value.ok.nonce

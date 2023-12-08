@@ -1,20 +1,20 @@
 {
   "canisters": {
-    "form_thing_backend": {
+    "backend": {
       "dependencies": ["vetkd_system_api"],
-      "main": "src/form_thing_backend/main.mo",
+      "main": "src/backend/main.mo",
       "type": "motoko"
     },
-    "form_thing_frontend": {
+    "frontend": {
       "dependencies": [
-        "form_thing_backend",
+        "backend",
         "vetkd_system_api",
         "internet_identity"
       ],
       "frontend": {
-        "entrypoint": "src/form_thing_frontend/dist/index.html"
+        "entrypoint": "src/frontend/dist/index.html"
       },
-      "source": ["src/form_thing_frontend/dist"],
+      "source": ["src/frontend/dist"],
       "type": "assets"
     },
     "vetkd_system_api": {
@@ -33,7 +33,7 @@
       }
     }
   },
-  "output_env_file": "src/form_thing_frontend/.env",
+  "output_env_file": "src/frontend/.env",
   "version": 1,
   "defaults": {
     "build": {

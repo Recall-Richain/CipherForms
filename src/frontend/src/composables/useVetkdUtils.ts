@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import * as vetkd from 'ic-vetkd-utils'
-import { form_thing_backend } from '@root/declarations/form_thing_backend'
+import { backend } from '@root/declarations/backend'
 import { useAuthStore } from '@/stores/authStore'
 
 export function useVetkdUtils() {
@@ -32,7 +32,7 @@ export function useVetkdUtils() {
 
   // Get the public vetkey
   const fetch_vetkey_public = async () => {
-    const pk_bytes_hex = await form_thing_backend.vetkd_get_public_key()
+    const pk_bytes_hex = await backend.vetkd_get_public_key()
     if (!pk_bytes_hex) return null
     key_public.value = hex_decode(pk_bytes_hex)
     return hex_decode(pk_bytes_hex)
@@ -119,7 +119,7 @@ export function useVetkdUtils() {
     aes_encrypt,
     aes_decrypt,
     vetkd,
-    form_thing_backend,
+    backend,
     key_derived,
     key_public
   }

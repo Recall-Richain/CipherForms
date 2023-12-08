@@ -162,7 +162,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useGeneralUtils } from '@/composables/useGeneralUtils'
 import { RouterLink } from 'vue-router'
-import type { FormReturn } from '@root/declarations/form_thing_backend/form_thing_backend.did.d.ts'
+import type { FormReturn } from '@root/declarations/backend/backend.did.d.ts'
 import { useUpdateFormSettingsModal } from '@/composables/useUpdateFormSettingsModal'
 import { useFormDeleteModal } from '@/composables/useFormDeleteModal'
 import { ref } from 'vue'

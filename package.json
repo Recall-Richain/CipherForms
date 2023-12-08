@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "frontend": "cd src/form_thing_frontend && vite --force",
-    "build": "cd src/form_thing_frontend && vite build",
-    "postinstall": "(cd src/form_thing_frontend && npm install);"
+    "frontend": "cd src/frontend && vite --force",
+    "build": "cd src/frontend && vite build",
+    "postinstall": "(cd src/frontend && npm install);"
   },
   "dependencies": {
     "@dfinity/agent": "^0.18.1",

@@ -1,7 +1,7 @@
-import { createActor } from '@root/declarations/form_thing_backend'
+import { createActor } from '@root/declarations/backend'
 import { AuthClient } from '@dfinity/auth-client'
 import { HttpAgent, type ActorSubclass, type Identity } from '@dfinity/agent'
-import type { _SERVICE } from '@root/declarations/form_thing_backend/form_thing_backend.did.d.ts'
+import type { _SERVICE } from '@root/declarations/backend/backend.did.d.ts'
 import type { Principal } from '@dfinity/principal'
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
     agent.value = new HttpAgent({ identity: identity.value })
     // Using the interface description of our webapp, we create an actor that we use to call the service methods.
-    actor.value = createActor(import.meta.env.CANISTER_ID_FORM_THING_BACKEND, {
+    actor.value = createActor(import.meta.env.CANISTER_ID_BACKEND, {
       agent: agent.value
     })
 
@@ -80,7 +80,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
     agent.value = new HttpAgent({ identity: identity.value })
     // Using the interface description of our webapp, we create an actor that we use to call the service methods.
-    actor.value = createActor(import.meta.env.CANISTER_ID_FORM_THING_BACKEND, {
+    actor.value = createActor(import.meta.env.CANISTER_ID_BACKEND, {
       agent: agent.value
     })
 
