@@ -1,4 +1,4 @@
-// FormThing Imports
+// CypherForms Imports
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
 import Bool "mo:base/Bool";
@@ -12,10 +12,10 @@ import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Map "mo:motoko-hash-map/Map";
 
-import FormThing "helpers";
+import CypherForms "helpers";
 import Hex "vendor/Hex";
 
-shared ({ caller = creator }) actor class FormThingActor() {
+shared ({ caller = creator }) actor class CypherFormsActor() {
 
   /**
    * Global Vars
@@ -24,17 +24,17 @@ shared ({ caller = creator }) actor class FormThingActor() {
 
   // FORMS
   // - Hashed by "Form ID"
-  stable var stable_forms = Map.new<Text, FormThing.Form>(thash);
+  stable var stable_forms = Map.new<Text, CypherForms.Form>(thash);
   // - Hashed by "User Principal", value is array of "Form ID"s
   stable var stable_forms_by_user = Map.new<Principal, [Text]>(phash);
 
   // ENTRIES
   // - Hashed by "Form ID"
-  stable var stable_entries = Map.new<Text, FormThing.Entries>(thash);
+  stable var stable_entries = Map.new<Text, CypherForms.Entries>(thash);
 
   // NONCES
   // - Hashed by "Nonce"
-  stable var stable_nonces = Map.new<Text, FormThing.NonceCheck>(thash);
+  stable var stable_nonces = Map.new<Text, CypherForms.NonceCheck>(thash);
 
   /**
    * Forms Functionality
@@ -45,7 +45,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
   /*============
    * Create Form
    *===========*/
-  public shared ({ caller }) func create_form(name : Text, status : FormThing.FormStatus, users : [Principal], organisation_id : Text) : async FormThing.ResultFormReturn {
+  public shared ({ caller }) func create_form(name : Text, status : CypherForms.FormStatus, users : [Principal], organisation_id : Text) : async CypherForms.ResultFormReturn {
 
     // Auth - No anonymous calls
     if (Principal.isAnonymous(caller) == true) {
@@ -53,14 +53,14 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // Create Form ID
-    let short_caller_id = FormThing.sub_text(Principal.toText(caller), 0, 8);
+    let short_caller_id = CypherForms.sub_text(Principal.toText(caller), 0, 8);
     let form_id = Text.concat(Nat.toText(current_form_id), short_caller_id);
 
     // Get time now
     let time_now = Time.now();
 
     // Create Form
-    let new_form : FormThing.Form = {
+    let new_form : CypherForms.Form = {
       created = time_now;
       updated = time_now;
       id = form_id;
@@ -122,7 +122,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     current_form_id += 1;
 
     // return form
-    let return_form : FormThing.FormReturn = {
+    let return_form : CypherForms.FormReturn = {
       created = time_now;
       updated = time_now;
       id = form_id;
@@ -139,7 +139,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
   /*============
    * Get Form by ID
    *===========*/
-  public shared ({ caller }) func get_form_by_id(form_id : Text) : async FormThing.ResultFormReturn {
+  public shared ({ caller }) func get_form_by_id(form_id : Text) : async CypherForms.ResultFormReturn {
 
     // Auth - No anonymous calls
     if (Principal.isAnonymous(caller) == true) {
@@ -147,7 +147,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // find form
-    let form = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+    let form = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
     switch (form) {
 
@@ -177,7 +177,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
         };
 
         // get entries total
-        let entries_check = Map.find<Text, FormThing.Entries>(stable_entries, func(k, v) { k == form_id });
+        let entries_check = Map.find<Text, CypherForms.Entries>(stable_entries, func(k, v) { k == form_id });
 
         let entries_total : Nat = switch (entries_check) {
           case null { 0 };
@@ -185,7 +185,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
         };
 
         // create return form
-        let form_return : FormThing.FormReturn = {
+        let form_return : CypherForms.FormReturn = {
           id = found_form.id;
           name = found_form.name;
           organisation_id = found_form.organisation_id;
@@ -207,10 +207,10 @@ shared ({ caller = creator }) actor class FormThingActor() {
    * Get Form by ID with Nonce
    * (for public use)
    *===========*/
-  public func get_form_by_id_with_nonce(form_id : Text) : async FormThing.ResultFormReturnPublicWithNonce {
+  public func get_form_by_id_with_nonce(form_id : Text) : async CypherForms.ResultFormReturnPublicWithNonce {
 
     // find form
-    let form = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+    let form = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
     switch (form) {
 
@@ -223,7 +223,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
       case (?(key, found_form)) {
 
         // create a nonce and save it
-        var nonce = await FormThing.create_nonce();
+        var nonce = await CypherForms.create_nonce();
 
         // if nonce exists, create a new one
         // very unlikely, but just in case
@@ -232,11 +232,11 @@ shared ({ caller = creator }) actor class FormThingActor() {
           if (nonce_exists == false) {
             break n;
           };
-          nonce := await FormThing.create_nonce();
+          nonce := await CypherForms.create_nonce();
         };
 
         // create nonce_check
-        let nonce_check : FormThing.NonceCheck = {
+        let nonce_check : CypherForms.NonceCheck = {
           form_id = found_form.id;
           lock = false;
           created = Time.now();
@@ -246,7 +246,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
         ignore Map.put(stable_nonces, thash, nonce, nonce_check);
 
         // create return form
-        let form_return : FormThing.FormReturnPublicWithNonce = {
+        let form_return : CypherForms.FormReturnPublicWithNonce = {
           id = found_form.id;
           name = found_form.name;
           status = found_form.status;
@@ -262,7 +262,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
   /*============
    * Get Form by Principal
    *===========*/
-  public shared ({ caller }) func get_forms_by_user_principal() : async FormThing.ResultFormReturnArray {
+  public shared ({ caller }) func get_forms_by_user_principal() : async CypherForms.ResultFormReturnArray {
 
     // Auth - No anonymous calls
     if (Principal.isAnonymous(caller) == true) {
@@ -284,12 +284,12 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // grab all the forms
-    let forms = Buffer.Buffer<FormThing.FormReturn>(0);
+    let forms = Buffer.Buffer<CypherForms.FormReturn>(0);
 
     // iterate over form_ids
     for (form_id in form_ids.vals()) {
       // find form
-      let form = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+      let form = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
       switch (form) {
         // do nothing if no form found
@@ -298,7 +298,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
         case (?(key, found_form)) {
 
           // get entries total
-          let entries_check = Map.find<Text, FormThing.Entries>(stable_entries, func(k, v) { k == form_id });
+          let entries_check = Map.find<Text, CypherForms.Entries>(stable_entries, func(k, v) { k == form_id });
 
           let entries_total : Nat = switch (entries_check) {
             case null { 0 };
@@ -306,7 +306,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
           };
 
           // create return form
-          let form_return : FormThing.FormReturn = {
+          let form_return : CypherForms.FormReturn = {
             id = found_form.id;
             name = found_form.name;
             organisation_id = found_form.organisation_id;
@@ -324,7 +324,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // covert forms buffer to array
-    let forms_return = Buffer.toArray<FormThing.FormReturn>(forms);
+    let forms_return = Buffer.toArray<CypherForms.FormReturn>(forms);
 
     return #ok(forms_return);
   };
@@ -333,7 +333,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
    * Update Form Settings
    *===========*/
   let update_form_settings_lock = Map.new<Text, Bool>(thash);
-  public shared ({ caller }) func update_form_settings(form_id : Text, name : Text, status : FormThing.FormStatus, users : [Principal]) : async FormThing.ResultText {
+  public shared ({ caller }) func update_form_settings(form_id : Text, name : Text, status : CypherForms.FormStatus, users : [Principal]) : async CypherForms.ResultText {
 
     // Auth - No anonymous calls
     if (Principal.isAnonymous(caller) == true) {
@@ -341,9 +341,9 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // find form
-    let form_check = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+    let form_check = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
-    let form : FormThing.Form = switch (form_check) {
+    let form : CypherForms.Form = switch (form_check) {
       // return null if no form found
       case null {
         return #err("Form not found");
@@ -464,7 +464,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // update form
-    let updated_form : FormThing.Form = {
+    let updated_form : CypherForms.Form = {
       created = form.created;
       updated = Time.now();
       id = form.id;
@@ -489,7 +489,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
   /*============
    * Delete Form
    *===========*/
-  public shared ({ caller }) func delete_form(form_id : Text) : async FormThing.ResultText {
+  public shared ({ caller }) func delete_form(form_id : Text) : async CypherForms.ResultText {
 
     // Auth - No anonymous calls
     if (Principal.isAnonymous(caller) == true) {
@@ -497,9 +497,9 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // find form
-    let form_check = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+    let form_check = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
-    let form : FormThing.Form = switch (form_check) {
+    let form : CypherForms.Form = switch (form_check) {
       // return null if no form found
       case null {
         return #err("Form not found");
@@ -578,10 +578,10 @@ shared ({ caller = creator }) actor class FormThingActor() {
    * Create Entry
    * (for public use)
    *===========*/
-  public func create_entry(form_id : Text, data : Text, nonce : Text) : async FormThing.ResultText {
+  public func create_entry(form_id : Text, data : Text, nonce : Text) : async CypherForms.ResultText {
 
     // find form
-    let form_check = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+    let form_check = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
     // return early if form not found
     let form = switch (form_check) {
@@ -597,7 +597,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // check nonce
-    let nonce_check = Map.find<Text, FormThing.NonceCheck>(stable_nonces, func(k, v) { k == nonce });
+    let nonce_check = Map.find<Text, CypherForms.NonceCheck>(stable_nonces, func(k, v) { k == nonce });
 
     switch (nonce_check) {
       // return early if nonce not found
@@ -625,7 +625,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
         };
 
         // lock nonce to ensure it can only be used once
-        let new_nonce_check : FormThing.NonceCheck = {
+        let new_nonce_check : CypherForms.NonceCheck = {
           form_id = nonce_check.form_id;
           lock = true;
           created = nonce_check.created;
@@ -638,27 +638,27 @@ shared ({ caller = creator }) actor class FormThingActor() {
     let created = Time.now();
 
     // Create Entry
-    let new_entry : FormThing.Entry = {
+    let new_entry : CypherForms.Entry = {
       created;
       form_id;
       data;
     };
 
     // get entries for form
-    let found_entries = Map.find<Text, FormThing.Entries>(stable_entries, func(k, v) { k == form_id });
+    let found_entries = Map.find<Text, CypherForms.Entries>(stable_entries, func(k, v) { k == form_id });
 
     switch (found_entries) {
 
       case null {
         // create entries if not found
-        let new_entries : FormThing.Entries = Map.new<Nat, FormThing.Entry>(nhash);
+        let new_entries : CypherForms.Entries = Map.new<Nat, CypherForms.Entry>(nhash);
         ignore Map.put(new_entries, nhash, form.next_entry_id, new_entry);
         // add new entry to entries
         ignore Map.put(stable_entries, thash, form_id, new_entries);
 
         // increment next_entry_id
         let next_entry_id = form.next_entry_id + 1;
-        let updated_form : FormThing.Form = {
+        let updated_form : CypherForms.Form = {
           created = form.created;
           updated = form.updated;
           id = form.id;
@@ -679,7 +679,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
         ignore Map.put(stable_entries, thash, form_id, found_entries);
         // increment next_entry_id
         let next_entry_id = form.next_entry_id + 1;
-        let updated_form : FormThing.Form = {
+        let updated_form : CypherForms.Form = {
           created = form.created;
           updated = form.updated;
           id = form.id;
@@ -709,7 +709,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
   /*============
    * Get Entries by Form ID
    *===========*/
-  public shared ({ caller }) func get_entries(form_id : Text) : async FormThing.ResultEntriesReturn {
+  public shared ({ caller }) func get_entries(form_id : Text) : async CypherForms.ResultEntriesReturn {
 
     // Auth - No anonymous calls
     if (Principal.isAnonymous(caller) == true) {
@@ -717,7 +717,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // find form
-    let form = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+    let form = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
     // return early if form not found
     switch (form) {
@@ -728,7 +728,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // get entries for form
-    let found_entries = Map.find<Text, FormThing.Entries>(stable_entries, func(k, v) { k == form_id });
+    let found_entries = Map.find<Text, CypherForms.Entries>(stable_entries, func(k, v) { k == form_id });
 
     switch (found_entries) {
 
@@ -739,7 +739,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
 
       // return entries if found
       case (?(key, found_entries)) {
-        return #ok(Map.toArray<Nat, FormThing.Entry>(found_entries));
+        return #ok(Map.toArray<Nat, CypherForms.Entry>(found_entries));
       };
     };
   };
@@ -758,7 +758,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
       // get time now
       let time_now = Time.now();
       // iterate over nonces
-      let nonces = Map.toArray<Text, FormThing.NonceCheck>(stable_nonces);
+      let nonces = Map.toArray<Text, CypherForms.NonceCheck>(stable_nonces);
       for (nonce in nonces.vals()) {
         // get time difference
         let time_diff = time_now - nonce.1.created;
@@ -774,7 +774,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
    * VETKD Functionality
    */
   public shared ({ caller }) func vetkd_get_public_key() : async Text {
-    let { public_key } = await FormThing.vetkd_api.vetkd_public_key({
+    let { public_key } = await CypherForms.vetkd_api.vetkd_public_key({
       canister_id = null;
       derivation_path = Array.make(Text.encodeUtf8("ibe_encryption"));
       key_id = { curve = #bls12_381; name = "test_key_1" };
@@ -782,7 +782,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     return Hex.encode(Blob.toArray(public_key));
   };
 
-  public shared ({ caller }) func vetkd_get_decryption_key(derivation_id : Blob, encryption_public_key : Blob) : async FormThing.ResultText {
+  public shared ({ caller }) func vetkd_get_decryption_key(derivation_id : Blob, encryption_public_key : Blob) : async CypherForms.ResultText {
 
     // Auth - No anonymous calls
     if (Principal.isAnonymous(caller) == true) {
@@ -802,7 +802,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // Check if valid form_id
-    let form_check = Map.find<Text, FormThing.Form>(stable_forms, func(k, v) { k == form_id });
+    let form_check = Map.find<Text, CypherForms.Form>(stable_forms, func(k, v) { k == form_id });
 
     // check if caller has permissions to access this key
     let can_access_key : Bool = switch (form_check) {
@@ -835,7 +835,7 @@ shared ({ caller = creator }) actor class FormThingActor() {
     };
 
     // get public key
-    let { encrypted_key } = await FormThing.vetkd_api.vetkd_encrypted_key({
+    let { encrypted_key } = await CypherForms.vetkd_api.vetkd_encrypted_key({
       derivation_id;
       public_key_derivation_path = Array.make(Text.encodeUtf8("ibe_encryption"));
       key_id = { curve = #bls12_381; name = "test_key_1" };

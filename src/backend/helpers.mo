@@ -10,7 +10,7 @@ import Map "mo:motoko-hash-map/Map";
 import Source "mo:uuid.mo/async/SourceV4";
 import UUID "mo:uuid.mo/UUID";
 
-module FormThingHelpers {
+module CypherFormsHelpers {
 
   /*
    * TYPES
