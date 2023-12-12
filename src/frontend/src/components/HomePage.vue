@@ -4,8 +4,15 @@
     <div class="relative py-16">
 
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <h1 class="p-1 mx-auto w-max px-4 rounded-3xl text-white bg-purple-500 text-[1.2rem] mt-10">Made with ❤️
+          using <a class="hover:text-black border-black border-none "
+            href="https://github.com/dfinity/interface-spec/pull/158">
+            VetKD >
+          </a>
+        </h1>
         <div class="mt-2 flow-root">
           <div class="relative mt-10 mx-auto max-w-[90%] text-center flex gap-3 flex-col justify-center items-center">
+
             <h1
               class="font-bold mx-auto w-[100%] sm:w-[80%] tracking-tight text-gray-100 xl:w-[100%] xl:text-[5rem] text-6xl">
               Secure Forms on
