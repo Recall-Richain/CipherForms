@@ -1,34 +1,21 @@
 <template>
   <section>
     <h2
-      class="mb-6 flex flex-wrap items-end justify-between gap-4 text-2xl font-bold tracking-tight text-gray-900 md:gap-2"
-    >
+      class="mb-6 flex flex-wrap items-end justify-between gap-4 text-2xl font-bold tracking-tight text-gray-900 md:gap-2">
       Entries
       <div class="flex flex-wrap items-end gap-4">
-        <span class="text-sm tracking-normal text-gray-500"
-          >Total Entries: {{ props.entries_total }}</span
-        >
-        <button
-          v-if="props.entries_total > 0"
-          @click="exportEntries"
-          :disabled="!entries || !entries.length"
+        <span class="text-sm tracking-normal text-gray-500">Total Entries: {{ props.entries_total }}</span>
+        <button v-if="props.entries_total > 0" @click="exportEntries" :disabled="!entries || !entries.length"
           type="submit"
-          class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-30"
-        >
+          class="rounded-md bg-highlight px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-dullhighlight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-highlight disabled:opacity-30">
           Export to CSV
         </button>
       </div>
     </h2>
-    <ul
-      v-if="!entries_loading && entries && entries.length"
-      role="list"
-      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-    >
-      <li
-        v-for="entry in entries"
-        :key="entry.id"
-        class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white p-6 shadow"
-      >
+    <ul v-if="!entries_loading && entries && entries.length" role="list"
+      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <li v-for="entry in entries" :key="entry.id"
+        class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white p-6 shadow">
         <div class="flex justify-between gap-x-4 py-3 text-sm text-gray-500">
           <span>#{{ entry.id }}</span>
           <span>Created: {{ entry.created }}</span>
@@ -41,11 +28,7 @@
         <div v-else>Entry could not be decrypted</div>
       </li>
     </ul>
-    <ul
-      v-if="entries_loading"
-      role="list"
-      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-    >
+    <ul v-if="entries_loading" role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <li class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white p-6 shadow">
         <div class="mb-4 h-2.5 animate-pulse rounded-full bg-gray-400"></div>
         <div class="pt-4">
@@ -71,19 +54,13 @@
         </div>
       </li>
     </ul>
-    <div
-      v-if="!entries_loading && (!entries || !entries.length) && !entries_error.status"
-      class="text-center"
-    >
+    <div v-if="!entries_loading && (!entries || !entries.length) && !entries_error.status" class="text-center">
       <PencilSquareIcon class="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
       <h3 class="mt-2 text-sm font-semibold text-gray-900">No entries yet</h3>
       <p class="mt-1 text-sm text-gray-500">Share this form to get entries.</p>
       <div class="mt-6">
-        <button
-          @click="copyLink"
-          type="button"
-          class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
+        <button @click="copyLink" type="button"
+          class="inline-flex items-center rounded-md bg-highlight px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-dullhighlight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-highlight">
           <DocumentDuplicateIcon v-if="!copied" class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
           <CheckIcon v-else class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
           Copy Link

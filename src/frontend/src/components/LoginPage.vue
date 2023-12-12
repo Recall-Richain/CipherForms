@@ -4,12 +4,8 @@
       Please Login
     </h1>
     <div class="text-center">
-      <button
-        v-if="!authStore.actor"
-        type="button"
-        @click="login"
-        class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      >
+      <button v-if="!authStore.actor" type="button" @click="login"
+        class="rounded-md bg-highlight px-3.5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-dullhighlight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-highlight">
         Log in
       </button>
     </div>

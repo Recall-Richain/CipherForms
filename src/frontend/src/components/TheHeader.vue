@@ -4,7 +4,12 @@
       <div class="flex">
         <RouterLink :to="{ name: 'home' }" class="-m-1.5 p-1.5 
         text-[1.3rem] font-bold text-white">
-          Cypher<span class="text-[#a8a8a8]">Forms</span>
+          <div class="flex items-center justify-center">
+            <img src="/images/logo.png" class="self-end w-[50px] h-[50px]" />
+            <h2>
+              Cypher<span class="text-[#a8a8a8]">Forms</span>
+            </h2>
+          </div>
         </RouterLink>
       </div>
       <section className="flex">

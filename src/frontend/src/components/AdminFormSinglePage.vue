@@ -7,9 +7,7 @@
             <p class="text-sm text-gray-500">#{{ form.id }}</p>
             <AdminFormStatus :status="form.status" />
           </div>
-          <h2
-            class="mb-6 border-b border-solid border-gray-200 pb-3 text-xl font-bold tracking-tight text-gray-900"
-          >
+          <h2 class="mb-6 border-b border-solid border-gray-200 pb-3 text-xl font-bold tracking-tight text-gray-900">
             {{ form.name }}
           </h2>
           <p class="mb-1 mt-2 text-sm font-bold text-gray-500">Owner</p>
@@ -24,12 +22,9 @@
           <p class="truncate">{{ formatDate(form.created) }}<br /></p>
           <p class="mb-1 mt-2 text-sm font-bold text-gray-500">Users</p>
           <div class="flex flex-wrap gap-2">
-            <span
-              v-for="user in form.users"
-              :key="user.toString()"
+            <span v-for="user in form.users" :key="user.toString()"
               class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-              :title="user.toString()"
-            >
+              :title="user.toString()">
               {{ user.toString().substring(0, 3) }}...{{
                 user.toString().substring(user.toString().length - 3)
               }}
@@ -37,58 +32,35 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-2">
-          <button
-            v-if="form.owner.toString() == authStore.principal?.toString()"
-            @click="updateFormSettingsModal.openModal(form as FormReturn)"
-            type="button"
-            class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
+          <button v-if="form.owner.toString() == authStore.principal?.toString()"
+            @click="updateFormSettingsModal.openModal(form as FormReturn)" type="button"
+            class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
             <Cog8ToothIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
             Settings
           </button>
-          <button
-            @click="copyLink"
-            type="button"
-            class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
-            <DocumentDuplicateIcon
-              v-if="!copied"
-              class="-ml-0.5 mr-1.5 h-5 w-5"
-              aria-hidden="true"
-            />
+          <button @click="copyLink" type="button"
+            class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+            <DocumentDuplicateIcon v-if="!copied" class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
             <CheckIcon v-else class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
             Copy Form Link
           </button>
 
-          <button
-            v-if="form.owner.toString() == authStore.principal?.toString()"
-            @click="formDeleteModal.openModal(form as FormReturn)"
-            type="button"
-            class="inline-flex items-center rounded-md bg-red-100 px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
+          <button v-if="form.owner.toString() == authStore.principal?.toString()"
+            @click="formDeleteModal.openModal(form as FormReturn)" type="button"
+            class="inline-flex items-center rounded-md bg-red-100 px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
             <ExclamationTriangleIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
             Delete Form
           </button>
 
-          <AdminModalFormSettings
-            :form="updateFormSettingsModal.currentForm.value"
-            :open="updateFormSettingsModal.isOpen.value"
-            @close="updateFormSettingsModal.onClose"
-            @updateSettings="updateFormSettingsModal.onUpdateSettings"
-          />
-          <AdminModalFormDelete
-            :form="formDeleteModal.currentForm.value"
-            :open="formDeleteModal.isOpen.value"
-            @close="formDeleteModal.onClose"
-            @confirmed="formDeleteModal.onConfirmed(onConfirmedCallback)"
-          />
+          <AdminModalFormSettings :form="updateFormSettingsModal.currentForm.value"
+            :open="updateFormSettingsModal.isOpen.value" @close="updateFormSettingsModal.onClose"
+            @updateSettings="updateFormSettingsModal.onUpdateSettings" />
+          <AdminModalFormDelete :form="formDeleteModal.currentForm.value" :open="formDeleteModal.isOpen.value"
+            @close="formDeleteModal.onClose" @confirmed="formDeleteModal.onConfirmed(onConfirmedCallback)" />
         </div>
       </div>
-      <AdminFormSinglePageEntries
-        :form_id="form.id"
-        :entries_total="Number(form.entries_total)"
-        class="col-span-full lg:col-span-6"
-      />
+      <AdminFormSinglePageEntries :form_id="form.id" :entries_total="Number(form.entries_total)"
+        class="col-span-full lg:col-span-6" />
     </div>
     <div v-else class="text-center">
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -98,10 +70,8 @@
         Sorry, either the form doesn't exist or you don't have access.
       </p>
       <div class="mt-10 flex items-center justify-center gap-x-6">
-        <RouterLink
-          :to="{ name: 'admin' }"
-          class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
+        <RouterLink :to="{ name: 'admin' }"
+          class="rounded-md bg-highlight px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-dullhighlight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-highlight">
           View my forms
         </RouterLink>
       </div>
