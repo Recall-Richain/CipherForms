@@ -19,7 +19,7 @@ CipherForms is for Web3 companies to "do forms" the Web3 way:
    - Employ a straightforward nonce system to counteract spam.
    - Facilitate easy export to CSV for versatile data management.
 
-## ***Project Milestones for Cypher Forms Development 🚀 :***
+## ***What Lies Ahead for Cypher Forms? 🚀 :***
 
 1. **Form Builder Implementation**
    - Develop and integrate a user-friendly Form Builder interface for easy form creation. 🛠️👨‍💻
